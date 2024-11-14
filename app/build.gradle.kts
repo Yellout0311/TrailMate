@@ -51,7 +51,14 @@ dependencies {
 
     implementation(libs.material.v1110)
 
+
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-analytics")
+
+    //구글 맵 api
+    implementation(libs.play.services.location)
+    implementation(libs.play.services.maps)
+    implementation(libs.material.v190)
+
 }
