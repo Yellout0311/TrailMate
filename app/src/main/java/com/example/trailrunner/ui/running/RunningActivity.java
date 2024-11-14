@@ -3,17 +3,28 @@ package com.example.trailrunner.ui.running;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.example.trailrunner.R;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.Locale;
 
-public class RunningActivity extends AppCompatActivity {
+public class RunningActivity extends AppCompatActivity implements OnMapReadyCallback {
     private ImageButton btnPlayStop;
     private ImageButton btnRetry;
     private TextView timerTextView;
@@ -21,6 +32,8 @@ public class RunningActivity extends AppCompatActivity {
     private long startTime = 0;
     private long elapsedTime = 0;
     private final Handler timerHandler = new Handler();
+    private GoogleMap mMap;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,5 +113,10 @@ public class RunningActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         timerHandler.removeCallbacks(timerRunnable);
+    }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+
     }
 }

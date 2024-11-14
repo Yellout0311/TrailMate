@@ -2,21 +2,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_home"
+        android:id="@+id/fragment_home"
         android:icon="@drawable/icon_map"
         android:title="@string/title_home" />
 
     <item
-        android:id="@+id/navigation_running"
+        android:id="@+id/fragment_running"
         android:icon="@drawable/icon_running"
         android:title="@string/title_running" />
 
     <item
-        android:id="@+id/navigation_like"
+        android:id="@+id/fragment_like"
         android:icon="@drawable/icon_heart"
         android:title="@string/title_like" />
     <item
-        android:id="@+id/navigation_profile"
+        android:id="@+id/fragment_profile"
         android:icon="@drawable/icon_person"
         android:title="@string/title_profile"/>
 

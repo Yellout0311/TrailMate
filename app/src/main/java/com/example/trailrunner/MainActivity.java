@@ -1,21 +1,27 @@
 package com.example.trailrunner;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.NavigationUI;
 
 import com.example.trailrunner.databinding.ActivityMainBinding;
+import com.example.trailrunner.ui.home.HomeFragment;
+import com.example.trailrunner.ui.like.LikeFragment;
+import com.example.trailrunner.ui.profile.ProfileFragment;
 import com.example.trailrunner.ui.running.RunningActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private NavController navController;
+
+    private BottomNavigationView bottomNavigationView;
 
     // test
 
@@ -25,29 +31,38 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        // Navigation Controller 설정
-        NavHostFragment navHostFragment =
-                (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-        navController = navHostFragment.getNavController();
-
-        // BottomNavigationView와 NavController를 연결
-        NavigationUI.setupWithNavController(binding.bottomNavigationView, navController);
-
-        // RunningActivity로 이동 처리
-        binding.bottomNavigationView.setOnItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.navigation_running) {
-                openRunningActivity();
+        bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.fragment_home) {
+                loadFragment(new HomeFragment());
+                return true;
+            } else if (itemId == R.id.fragment_like) {
+                loadFragment(new LikeFragment());
+                return true;
+            } else if (itemId == R.id.fragment_running) {
+                startActivity(new Intent(this, RunningActivity.class));
+                return true;
+            } else if (itemId == R.id.fragment_profile) {
+                loadFragment(new ProfileFragment());
                 return true;
             }
-            return NavigationUI.onNavDestinationSelected(item, navController);
+            return false;
         });
+        // 초기 프래그먼트 설정
+        loadFragment(new HomeFragment());
+    }
+    private void loadFragment(Fragment fragment) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit();
     }
 
     private void openRunningActivity() {
