@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private NavController navController;
 
-    // test 2
+    // test
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

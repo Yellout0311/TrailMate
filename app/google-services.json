@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "182909303005",
+    "project_id": "trailrunner-8633e",
+    "storage_bucket": "trailrunner-8633e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:182909303005:android:8a7a09c5dee053987e4334",
+        "android_client_info": {
+          "package_name": "com.example.trailrunner"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvFkty0xchaTMwKbnJ5N493mj7r_NtGDk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
