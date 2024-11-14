@@ -48,4 +48,9 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
 
     implementation(libs.material.v1110)
+
+    //구글 맵 api
+    implementation(libs.play.services.location)
+    implementation(libs.play.services.maps)
+    implementation(libs.material.v190)
 }
