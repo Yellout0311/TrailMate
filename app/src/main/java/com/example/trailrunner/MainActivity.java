@@ -19,7 +19,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
-    private NavController navController;
 
     private BottomNavigationView bottomNavigationView;
 
@@ -41,24 +40,24 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.fragment_home) {
-                loadFragment(new HomeFragment());
+                transferTo(new HomeFragment());
                 return true;
             } else if (itemId == R.id.fragment_like) {
-                loadFragment(new LikeFragment());
+                transferTo(new LikeFragment());
                 return true;
             } else if (itemId == R.id.fragment_running) {
                 startActivity(new Intent(this, RunningActivity.class));
                 return true;
             } else if (itemId == R.id.fragment_profile) {
-                loadFragment(new ProfileFragment());
+                transferTo(new ProfileFragment());
                 return true;
             }
             return false;
         });
         // 초기 프래그먼트 설정
-        loadFragment(new HomeFragment());
+        transferTo(new HomeFragment());
     }
-    private void loadFragment(Fragment fragment) {
+    private void transferTo(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)
