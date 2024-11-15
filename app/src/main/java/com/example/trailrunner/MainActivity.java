@@ -7,7 +7,6 @@ import android.view.Menu;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
 
 import com.example.trailrunner.databinding.ActivityMainBinding;
 import com.example.trailrunner.ui.home.HomeFragment;
@@ -18,17 +17,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
 public class MainActivity extends AppCompatActivity {
-    private ActivityMainBinding binding;
 
     private BottomNavigationView bottomNavigationView;
-
-    // test
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.bottom_nav_menu, menu);
-        return true;
-    }
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -40,22 +30,27 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.fragment_home) {
-                transferTo(new HomeFragment());
+                transferTo(HomeFragment.newInstance("param1", "param2"));
                 return true;
             } else if (itemId == R.id.fragment_like) {
-                transferTo(new LikeFragment());
+                transferTo(LikeFragment.newInstance("param1", "param2"));
                 return true;
             } else if (itemId == R.id.fragment_running) {
                 startActivity(new Intent(this, RunningActivity.class));
                 return true;
             } else if (itemId == R.id.fragment_profile) {
-                transferTo(new ProfileFragment());
+                transferTo(ProfileFragment.newInstance("param1", "param2"));
                 return true;
             }
             return false;
         });
+
+        bottomNavigationView.setOnItemReselectedListener(item -> {
+
+        });
+
         // 초기 프래그먼트 설정
-        transferTo(new HomeFragment());
+        transferTo(HomeFragment.newInstance("param1", "param2"));
     }
     private void transferTo(Fragment fragment) {
         getSupportFragmentManager()
