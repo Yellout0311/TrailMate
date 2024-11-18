@@ -104,6 +104,6 @@ public class EmailPasswordActivity extends AppCompatActivity {
     private void moveToHome() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
-        finish(); // 현재 Activity 종료
+        finish();
     }
 }
