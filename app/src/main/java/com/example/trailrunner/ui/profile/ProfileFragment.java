@@ -7,10 +7,16 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.trailrunner.R;
+import com.google.firebase.auth.FirebaseAuth;
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements View.OnClickListener {
+
+    private FirebaseAuth mAuth;
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -41,6 +47,19 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        Button logout = (Button) view.findViewById(R.id.button_logout);
+        mAuth = FirebaseAuth.getInstance();
+
+        logout.setOnClickListener(this);
+
+        return view;
+    }
+
+    @Override
+    public void onClick(View view) {
+        mAuth.signOut();
+        Toast.makeText(getActivity(), "성공", Toast.LENGTH_SHORT).show();
     }
 }

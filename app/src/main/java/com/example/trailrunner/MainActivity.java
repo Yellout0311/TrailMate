@@ -1,29 +1,38 @@
 package com.example.trailrunner;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import com.example.trailrunner.databinding.ActivityMainBinding;
 import com.example.trailrunner.ui.home.HomeFragment;
 import com.example.trailrunner.ui.like.LikeFragment;
 import com.example.trailrunner.ui.profile.ProfileFragment;
 import com.example.trailrunner.ui.running.RunningActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
+    private FirebaseAuth mAuth;
     private BottomNavigationView bottomNavigationView;
 
-    @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mAuth = FirebaseAuth.getInstance();
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            // 로그인되지 않은 상태라면 EmailPasswordActivity로 이동
+            moveToLogin();
+            return;
+        }
+
+        // 로그인된 상태라면 메인 액티비티의 콘텐츠 설정
         setContentView(R.layout.activity_main);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation_view);
@@ -45,22 +54,23 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
 
-        bottomNavigationView.setOnItemReselectedListener(item -> {
-
-        });
+        bottomNavigationView.setOnItemReselectedListener(item -> {});
 
         // 초기 프래그먼트 설정
         transferTo(HomeFragment.newInstance("param1", "param2"));
     }
+
+    private void moveToLogin() {
+        Intent intent = new Intent(this, EmailPasswordActivity.class);
+        startActivity(intent);
+        finish(); // 메인 액티비티 종료
+    }
+
     private void transferTo(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
                 .commit();
-    }
-
-    private void openRunningActivity() {
-        Intent intent = new Intent(this, RunningActivity.class);
-        startActivity(intent);
     }
 }
