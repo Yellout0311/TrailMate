@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -39,8 +40,8 @@ public class EmailPasswordActivity extends AppCompatActivity {
         }
 
         // UI 초기화
-        emailEditText = findViewById(R.id.edit_text_email);
-        passwordEditText = findViewById(R.id.edit_text_password);
+        emailEditText = findViewById(R.id.login_email);
+        passwordEditText = findViewById(R.id.login_password);
         loginButton = findViewById(R.id.button_login);
         registerButton = findViewById(R.id.button_register);
 
@@ -59,31 +60,10 @@ public class EmailPasswordActivity extends AppCompatActivity {
 
         // 회원가입 버튼 클릭 이벤트
         registerButton.setOnClickListener(v -> {
-            String email = emailEditText.getText().toString().trim();
-            String password = passwordEditText.getText().toString().trim();
-
-            if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "이메일과 비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            createAccount(email, password);
+            Intent intent = new Intent(this, RegisterActivity.class);
+            startActivity(intent);
+            finish();
         });
-    }
-
-    private void createAccount(String email, String password) {
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        Log.d(TAG, "createUserWithEmail:success");
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        Toast.makeText(this, "회원가입 성공!", Toast.LENGTH_SHORT).show();
-                        moveToHome();
-                    } else {
-                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                        Toast.makeText(this, "회원가입 실패: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
     }
 
     private void signIn(String email, String password) {

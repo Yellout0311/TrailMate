@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
-            // 로그인되지 않은 상태라면 EmailPasswordActivity로 이동
             moveToLogin();
             return;
         }

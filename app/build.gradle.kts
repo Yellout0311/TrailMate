@@ -51,10 +51,10 @@ dependencies {
 
     implementation(libs.material.v1110)
 
-
-    implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
+    implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-firestore")
 
     //구글 맵 api
     implementation(libs.play.services.location)
