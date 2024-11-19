@@ -1,5 +1,6 @@
 package com.example.trailrunner.ui.profile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.example.trailrunner.EmailPasswordActivity;
+import com.example.trailrunner.MainActivity;
 import com.example.trailrunner.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -23,7 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-public class ProfileFragment extends Fragment implements View.OnClickListener {
+public class ProfileFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore mStore;
@@ -77,22 +80,20 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 nickname.setText((CharSequence) document.get("nickname"));
                             }
-                        } else {
-
                         }
                     }
                 });
         }
 
-        logout.setOnClickListener(this);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAuth.signOut();
+                Intent intent = new Intent(getActivity(), EmailPasswordActivity.class);
+                startActivity(intent);
+            }
+        });
 
         return view;
-    }
-
-    @Override
-    public void onClick(View view) {
-        // 로그아웃 처리
-        mAuth.signOut();
-        Toast.makeText(getActivity(), "로그아웃 성공", Toast.LENGTH_SHORT).show();
     }
 }
