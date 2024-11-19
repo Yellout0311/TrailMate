@@ -68,22 +68,25 @@ public class ProfileFragment extends Fragment {
         Button logout = view.findViewById(R.id.button_logout);
         TextView nickname = view.findViewById(R.id.button_nickname);
 
-        CollectionReference productRef = mStore.collection("users");
+        CollectionReference usersRef = mStore.collection("users");
 
         if (mAuth.getCurrentUser() != null) {
-            productRef
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                nickname.setText((CharSequence) document.get("nickname"));
+            String uid = mAuth.getCurrentUser().getUid();
+            usersRef.whereEqualTo("documentId", uid)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    String nicknameValue = document.getString("nickname");
+                                    nickname.setText(nicknameValue);
+                                }
                             }
                         }
-                    }
-                });
+                    });
         }
+
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,6 +94,7 @@ public class ProfileFragment extends Fragment {
                 mAuth.signOut();
                 Intent intent = new Intent(getActivity(), EmailPasswordActivity.class);
                 startActivity(intent);
+                getActivity().finish();
             }
         });
 
