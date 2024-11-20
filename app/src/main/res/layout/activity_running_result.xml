@@ -10,7 +10,8 @@
 
     <!-- 러닝 결과 정보 -->
     <FrameLayout
-        android:id="@+id/map_result_container"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="379dp"
         android:layout_height="300dp"
         android:layout_weight="1"
