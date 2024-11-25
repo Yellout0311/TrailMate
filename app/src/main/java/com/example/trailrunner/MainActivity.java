@@ -55,9 +55,19 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigationView.setOnItemReselectedListener(item -> {});
 
+
         // 초기 프래그먼트 설정
         transferTo(HomeFragment.newInstance("param1", "param2"));
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (bottomNavigationView != null) {
+            bottomNavigationView.setSelectedItemId(R.id.fragment_home);
+        }
+    }
+
 
     private void moveToLogin() {
         Intent intent = new Intent(this, EmailPasswordActivity.class);
