@@ -118,32 +118,40 @@ public class RunningActivity extends AppCompatActivity implements OnMapReadyCall
                 .setMinUpdateDistanceMeters(5) //5밈터마다 업데이트
                 .build();
     }
-    private void createLocationCallback(){
+    private LatLng previousLocation = null; // 이전 위치 저장용 변수 추가
+
+    private void createLocationCallback() {
         locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(@NonNull LocationResult locationResult) {
-                if(locationResult == null || isRunning) {
+                if (!isRunning) {
                     return;
                 }
+
                 Location location = locationResult.getLastLocation();
-                if(location != null){
-                    LatLng newPoint = new LatLng(location.getLatitude(), location.getLongitude());
-                    pathPoints.add(newPoint);
+                if (location != null) {
+                    LatLng currentPoint = new LatLng(location.getLatitude(), location.getLongitude());
 
-                    //지도에 경로 그리기
-                    mMap.clear();//기존 경로 지우기
-                    polylineOptions = new PolylineOptions()
-                            .color(Color.BLUE)
-                            .width(12f)
-                            .addAll(pathPoints);
-                    mMap.addPolyline(polylineOptions);
+                    // 이전 위치가 있으면 선 그리기
+                    if (previousLocation != null) {
+                        mMap.addPolyline(new PolylineOptions()
+                                .color(Color.BLUE)  // 선 색상
+                                .width(15f)        // 선 두께
+                                .geodesic(true)    // 곡선으로 그리기
+                                .add(previousLocation)  // 이전 위치
+                                .add(currentPoint));    // 현재 위치
+                    }
 
-                    //카메라 현제 위치로 이동
-                    mMap.animateCamera(CameraUpdateFactory.newLatLng(newPoint));
+                    // 현재 위치를 이전 위치로 저장
+                    previousLocation = currentPoint;
+
+                    // 카메라를 현재 위치로 이동
+                    mMap.animateCamera(CameraUpdateFactory.newLatLng(currentPoint));;
                 }
             }
         };
     }
+
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
@@ -264,6 +272,7 @@ public class RunningActivity extends AppCompatActivity implements OnMapReadyCall
         timerTextView.setText("00:00:00");
         //경로 초기화
         pathPoints.clear();
+        previousLocation = null;  // 이전 위치 초기화
         if(mMap != null) {
             mMap.clear();
         }
