@@ -6,7 +6,6 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.trailrunner.R;
 
 public class CourseRegisterActivity extends AppCompatActivity {

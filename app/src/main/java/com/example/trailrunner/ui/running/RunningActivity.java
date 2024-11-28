@@ -50,6 +50,14 @@ public class RunningActivity extends AppCompatActivity implements OnMapReadyCall
     private FusedLocationProviderClient fusedLocationClient; // 현재위치 가져오는 client
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
 
+    private float totalDistance = 0f;
+    private TextView distanceTextView;
+    private TextView speedTextView;
+    private TextView caloriesTextView;
+    private float currentSpeed = 0f;
+    private float totalCalories = 0f;
+    private final float userWeight = 70f; // 사용자 체중
+
     // 경로 추적을 위한 변수들
     private LocationCallback locationCallback;
     private LocationRequest locationRequest;
@@ -85,9 +93,11 @@ public class RunningActivity extends AppCompatActivity implements OnMapReadyCall
         btnRetry = findViewById(R.id.btn_retry);
         timerTextView = findViewById(R.id.timer_text);
 
-        //위치 서비스 초기화
+        //위치,거리 서비스 초기화 + 움직인 거리, 속도, 칼로리
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
+        distanceTextView = findViewById(R.id.distance_text_view);
+        speedTextView = findViewById(R.id.speed_text_view);
+        caloriesTextView = findViewById(R.id.calories_text_view);
         //경로 추적 초기화
         pathPoints = new ArrayList<>();
         polylineOptions = new PolylineOptions()
@@ -113,24 +123,38 @@ public class RunningActivity extends AppCompatActivity implements OnMapReadyCall
         });
     }
 
+    private float calculateDistance(LatLng point1, LatLng point2) {
+        float[] results = new float[1];
+        Location.distanceBetween(
+                point1.latitude, point1.longitude,
+                point2.latitude, point2.longitude,
+                results
+        );
+        return results[0]; // 미터 단위 거리
+    }
+
     private void createLocationRequest(){
         locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY,1000)
                 .setMinUpdateDistanceMeters(5) //5밈터마다 업데이트
                 .build();
     }
     private LatLng previousLocation = null; // 이전 위치 저장용 변수 추가
-
+    private long previousLocationTime = 0;
     private void createLocationCallback() {
         locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(@NonNull LocationResult locationResult) {
-                if (!isRunning) {
+                if (!isRunning){
                     return;
-                }
+            }
 
                 Location location = locationResult.getLastLocation();
                 if (location != null) {
                     LatLng currentPoint = new LatLng(location.getLatitude(), location.getLongitude());
+
+                    Log.d("LocationUpdate", "Location received: " + currentPoint);
+                    // 러닝 통계 업데이트
+                    updateRunningStats(currentPoint, location);
 
                     // 이전 위치가 있으면 선 그리기
                     if (previousLocation != null) {
@@ -142,10 +166,8 @@ public class RunningActivity extends AppCompatActivity implements OnMapReadyCall
                                 .add(currentPoint));    // 현재 위치
                     }
 
-                    // 현재 위치를 이전 위치로 저장
+                    // 현재 위치를 이전 위치로 저장 + 카메라를 현재 위치로 이동
                     previousLocation = currentPoint;
-
-                    // 카메라를 현재 위치로 이동
                     mMap.animateCamera(CameraUpdateFactory.newLatLng(currentPoint));;
                 }
             }
@@ -267,13 +289,28 @@ public class RunningActivity extends AppCompatActivity implements OnMapReadyCall
         isRunning = false;
         btnPlayStop.setImageResource(R.drawable.play);
         btnRetry.setVisibility(View.GONE);
+
         timerHandler.removeCallbacks(timerRunnable);
         elapsedTime = 0;
         timerTextView.setText("00:00:00");
-        //경로 초기화
-        pathPoints.clear();
-        previousLocation = null;  // 이전 위치 초기화
-        if(mMap != null) {
+
+        // 통계 정보 리셋
+        totalDistance = 0f;
+        currentSpeed = 0f;
+        totalCalories = 0f;
+        previousLocation = null;
+        previousLocationTime = 0;
+
+        // UI 업데이트
+        if (distanceTextView != null)
+            distanceTextView.setText("거리: 0.00 km");
+        if (speedTextView != null)
+            speedTextView.setText("속도: 0.0 km/h");
+        if (caloriesTextView != null)
+            caloriesTextView.setText("칼로리: 0.0 kcal");
+
+        // 지도 초기화
+        if (mMap != null) {
             mMap.clear();
         }
     }
@@ -300,6 +337,47 @@ public class RunningActivity extends AppCompatActivity implements OnMapReadyCall
 
     private void startTimer() {
         timerRunnable.run();
+    }
+
+    //거리, 속도, 칼로리 계산 + 실시간 업데이트
+    private void updateRunningStats(LatLng currentLocation, Location location) {
+        if (previousLocation != null) {
+            float segmentDistance = calculateDistance(previousLocation, currentLocation);
+            totalDistance += segmentDistance;
+
+            // 속도 계산 (m/s에서 km/h로)
+            float timeDiff = location.getTime() - previousLocationTime;
+            currentSpeed = (segmentDistance / (timeDiff / 1000f)) * 3.6f;
+
+            float timeDiffHours = timeDiff / (1000f * 60 * 60);
+            float caloriesBurned = 7f * userWeight * timeDiffHours;
+            totalCalories += caloriesBurned;
+
+            // UI 업데이트
+            updateStatsDisplay();
+        }
+
+        previousLocationTime = location.getTime();
+    }
+    // 통계 정보 디스플레이 업데이트 메서드
+    private void updateStatsDisplay() {
+        Log.d("RunningStats", String.format("Distance: %.2f, Speed: %.1f, Calories: %.1f",
+                totalDistance / 1000f, currentSpeed, totalCalories));
+
+        if (distanceTextView != null) {
+            distanceTextView.setText(String.format(Locale.getDefault(),
+                    "거리: %.2f km", totalDistance / 1000f));
+        }
+
+        if (speedTextView != null) {
+            speedTextView.setText(String.format(Locale.getDefault(),
+                    "속도: %.1f km/h", currentSpeed));
+        }
+
+        if (caloriesTextView != null) {
+            caloriesTextView.setText(String.format(Locale.getDefault(),
+                    "칼로리: %.1f kcal", totalCalories));
+        }
     }
 
     @Override
