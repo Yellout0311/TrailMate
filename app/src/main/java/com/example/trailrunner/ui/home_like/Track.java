@@ -1,15 +1,15 @@
-package com.example.trailrunner.ui.like;
+package com.example.trailrunner.ui.home_like;
 
-public class Course {
+public class Track {
     int imageResourceId;
     String mountain;
-    String diatance;
+    String distance;
     String level;
 
-    public Course(int imageResourceId, String mountain, String diatance, String level) {
+    public Track(int imageResourceId, String mountain, String diatance, String level) {
         this.imageResourceId = imageResourceId;
         this.mountain = mountain;
-        this.diatance = diatance;
+        this.distance = diatance;
         this.level = level;
     }//생성자 추가
 
@@ -30,11 +30,11 @@ public class Course {
     }
 
     public String getDistance() {
-        return diatance+"km";
+        return distance +"km";
     }
 
     public void setDistance(String distance) {
-        this.diatance = diatance;
+        this.distance = this.distance;
     }
 
     public String getLevel() {

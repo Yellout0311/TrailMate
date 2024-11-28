@@ -1,4 +1,4 @@
-package com.example.trailrunner.ui.like;
+package com.example.trailrunner.ui.home_like;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,7 +22,7 @@ import com.example.trailrunner.R;
 
 public class LikeFragment extends Fragment {
     RecyclerView recyclerView;
-    CourseChoice adapter;
+    TrackChoice adapter;
     TextView count;
 
     public static LikeFragment newInstance(String param1, String param2) {
@@ -61,14 +61,14 @@ public class LikeFragment extends Fragment {
             return insets;
         });
 
-        recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView = view.findViewById(R.id.homerecyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new CourseChoice();
+        adapter = new TrackChoice();
 
-        adapter.addItem(new Course(R.drawable.mt, "북한산 백운대", "5", "easy"));
-        adapter.addItem(new Course(R.drawable.mt, "관악산 메인코스", "10", "normal"));
-        adapter.addItem(new Course(R.drawable.mt, "수락산 전망대", "8", "hard"));
+        adapter.addItem(new Track(R.drawable.mt, "북한산 백운대", "5", "easy"));
+        adapter.addItem(new Track(R.drawable.mt, "관악산 메인코스", "10", "normal"));
+        adapter.addItem(new Track(R.drawable.mt, "수락산 전망대", "8", "hard"));
 
         count = view.findViewById(R.id.textView5);
         count.setText("즐겨찾기 " + adapter.getItemCount() + "개");
@@ -76,7 +76,7 @@ public class LikeFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         adapter.setOnItemClickListener((holder, itemView, position) -> {
-            Course item = adapter.getItem(position);
+            Track item = adapter.getItem(position);
             Toast.makeText(getContext(), "코스 선택됨: " + item.getMountain(),
                     Toast.LENGTH_LONG).show();
         });
@@ -91,7 +91,7 @@ public class LikeFragment extends Fragment {
             String distance = editText2.getText().toString();
             String level = editText3.getText().toString();
 
-            adapter.addItem(new Course(R.drawable.mt, mountain, distance, level));
+            adapter.addItem(new Track(R.drawable.mt, mountain, distance, level));
             adapter.notifyDataSetChanged();
             updateCountText();
         });

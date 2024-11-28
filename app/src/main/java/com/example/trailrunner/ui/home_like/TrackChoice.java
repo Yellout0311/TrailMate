@@ -1,4 +1,4 @@
-package com.example.trailrunner.ui.like;
+package com.example.trailrunner.ui.home_like;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +16,9 @@ import android.os.Handler;
 
 import com.example.trailrunner.R;
 
-public class CourseChoice extends RecyclerView.Adapter<CourseChoice.ViewHolder>
+public class TrackChoice extends RecyclerView.Adapter<TrackChoice.ViewHolder>
         implements OnPersonItemClickListener {
-    ArrayList<Course> items = new ArrayList<>();
+    ArrayList<Track> items = new ArrayList<>();
     OnPersonItemClickListener listener;
     OnItemRemovedListener removedListener;
 
@@ -33,7 +33,7 @@ public class CourseChoice extends RecyclerView.Adapter<CourseChoice.ViewHolder>
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
-        Course item = items.get(position);
+        Track item = items.get(position);
         viewHolder.setItem(item);
     }
 
@@ -42,19 +42,19 @@ public class CourseChoice extends RecyclerView.Adapter<CourseChoice.ViewHolder>
         return items.size();
     }
 
-    public void addItem(Course item) {
+    public void addItem(Track item) {
         items.add(item);
     }
 
-    public void setItems(ArrayList<Course> items) {
+    public void setItems(ArrayList<Track> items) {
         this.items = items;
     }
 
-    public Course getItem(int position) {
+    public Track getItem(int position) {
         return items.get(position);
     }
 
-    public void setItem(int position, Course item) {
+    public void setItem(int position, Track item) {
         items.set(position, item);
     }
 
@@ -68,7 +68,7 @@ public class CourseChoice extends RecyclerView.Adapter<CourseChoice.ViewHolder>
 
     public void removeItem(int position) {
         if (position != RecyclerView.NO_POSITION) {
-            Course removedItem = items.remove(position);
+            Track removedItem = items.remove(position);
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, items.size());
 
@@ -95,9 +95,9 @@ public class CourseChoice extends RecyclerView.Adapter<CourseChoice.ViewHolder>
         TextView textView2;
         TextView textView3;
         ImageButton imageButton;
-        CourseChoice adapter;  // adapter 필드를 추가
+        TrackChoice adapter;  // adapter 필드를 추가
 
-        public ViewHolder(View itemView, final CourseChoice adapter) {
+        public ViewHolder(View itemView, final TrackChoice adapter) {
             super(itemView);
             this.adapter = adapter;  // 전달받은 adapter를 필드에 저장
 
@@ -122,7 +122,7 @@ public class CourseChoice extends RecyclerView.Adapter<CourseChoice.ViewHolder>
             });
         }
 
-        public void setItem(Course item) {
+        public void setItem(Track item) {
             imageView.setImageResource(item.getImageResourceId());
             textView.setText(item.getMountain());
             textView2.setText(item.getDistance());

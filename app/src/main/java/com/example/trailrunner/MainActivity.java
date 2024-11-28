@@ -6,8 +6,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import com.example.trailrunner.ui.home.HomeFragment;
-import com.example.trailrunner.ui.like.LikeFragment;
+import com.example.trailrunner.ui.home_like.HomeFragment;
 import com.example.trailrunner.ui.profile.ProfileFragment;
 import com.example.trailrunner.ui.running.RunningActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -38,10 +37,10 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.fragment_home) {
-                transferTo(HomeFragment.newInstance("param1", "param2"));
+                transferTo(com.example.trailrunner.ui.home_like.HomeFragment.newInstance("param1", "param2"));
                 return true;
             } else if (itemId == R.id.fragment_like) {
-                transferTo(LikeFragment.newInstance("param1", "param2"));
+                transferTo(com.example.trailrunner.ui.home_like.LikeFragment.newInstance("param1", "param2"));
                 return true;
             } else if (itemId == R.id.fragment_running) {
                 startActivity(new Intent(this, RunningActivity.class));
