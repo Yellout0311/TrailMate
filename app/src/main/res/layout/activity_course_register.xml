@@ -14,9 +14,10 @@
         android:layout_marginTop="16dp"/>
 
     <TextView
+        android:id="@+id/total_distance_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="거리: 5.00 Km"
+        android:text="거리: "
         android:layout_marginTop="16dp"/>
 
     <Spinner
@@ -28,7 +29,7 @@
     <EditText
         android:id="@+id/et_comment"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:gravity="top"
         android:hint="comment"
         android:layout_marginTop="20dp"/>

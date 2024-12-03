@@ -281,6 +281,8 @@ public class RunningActivity extends AppCompatActivity implements OnMapReadyCall
         // ResultActivity로 전환하면서 시간 전달
         Intent intent = new Intent(this, RunningResultActivity.class);
         intent.putExtra("TIME_ELAPSED", elapsedTime);
+        intent.putParcelableArrayListExtra("ROUTE_POINTS", new ArrayList<>(pathPoints));
+        intent.putExtra("TOTAL_DISTANCE", totalDistance);
         startActivity(intent);
         finish(); // 현재 Activity 종료
     }

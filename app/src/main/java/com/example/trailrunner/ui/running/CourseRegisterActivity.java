@@ -4,19 +4,33 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.trailrunner.R;
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.List;
 
 public class CourseRegisterActivity extends AppCompatActivity {
+
+    private List<LatLng> routePoints;
+    private double totalDistance;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_register);
 
+        totalDistance = getIntent().getDoubleExtra("TOTAL_DISTANCE", 0.0);
+        routePoints = getIntent().getParcelableArrayListExtra("ROUTE_POINTS");
+
         Spinner difficultySpinner = findViewById(R.id.spinner_difficulty);
         Spinner visibilitySpinner = findViewById(R.id.spinner_visibility);
         Button btnUpload = findViewById(R.id.btn_upload);
+        TextView textView = findViewById(R.id.total_distance_textview);
+        textView.setText("거리: " + totalDistance + "km");
+
 
         // 스피너 설정
         ArrayAdapter<CharSequence> difficultyAdapter = ArrayAdapter.createFromResource(
