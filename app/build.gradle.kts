@@ -61,4 +61,5 @@ dependencies {
     implementation(libs.play.services.maps)
     implementation(libs.material.v190)
 
+    implementation(libs.material)
 }
