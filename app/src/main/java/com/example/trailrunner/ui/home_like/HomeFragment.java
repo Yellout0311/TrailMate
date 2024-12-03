@@ -1,11 +1,10 @@
 package com.example.trailrunner.ui.home_like;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,8 +18,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.trailrunner.R;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements OnMapReadyCallback {
+    private GoogleMap mMap;
+
     RecyclerView recyclerView;
     TrackChoice adapter;
     TextView count;
@@ -54,6 +62,18 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+                .findFragmentById(R.id.map);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        } else {
+            Log.d("MAP", "Map Fragment is null");
+        }
+
+        View bottomSheet = view.findViewById(R.id.bottomSheet);
+        BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bottomSheet);
+        behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
         ViewCompat.setOnApplyWindowInsetsListener(view.findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -116,6 +136,16 @@ public class HomeFragment extends Fragment {
                 updateCountText();
             }
         });*/
+    }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        mMap = googleMap;
+
+        // 서울 위치
+        LatLng seoul = new LatLng(37.5665, 126.9780);
+        mMap.addMarker(new MarkerOptions().position(seoul).title("Seoul"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(seoul, 15));
     }
 
     /*private void updateCountText() {
