@@ -168,6 +168,7 @@ public class RunningActivity extends AppCompatActivity implements OnMapReadyCall
 
                     // 현재 위치를 이전 위치로 저장 + 카메라를 현재 위치로 이동
                     previousLocation = currentPoint;
+                    pathPoints.add(currentPoint); //pathPoint에 현재 위치 저장
                     mMap.animateCamera(CameraUpdateFactory.newLatLng(currentPoint));;
                 }
             }
