@@ -134,7 +134,7 @@ public class RunningActivity extends AppCompatActivity implements OnMapReadyCall
     }
 
     private void createLocationRequest(){
-        locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY,1000)
+        locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY,3000)
                 .setMinUpdateDistanceMeters(5) //5밈터마다 업데이트
                 .build();
     }
