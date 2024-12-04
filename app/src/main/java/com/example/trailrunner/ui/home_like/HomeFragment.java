@@ -166,9 +166,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
                         // 모든 문서 확인
                         for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                            Log.d("Firestore Debug", "Document ID: " + documentSnapshot.getId());
-                            Log.d("Firestore Debug", "Document Data: " + documentSnapshot.getData());
-
                             if (documentSnapshot.exists()) {
                                 // 문서 데이터를 Map으로 가져오기
                                 Map<String, Object> courseData = documentSnapshot.getData();
@@ -183,17 +180,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                                 }
                             }
                         }
-
-                        // 결과 확인
-                        for (Track track : trackList) {
-                            Log.d("Track Info", track.toString());
-                        }
-                    } else {
-                        Log.d("Firestore Debug", "No documents found in 'courses' collection.");
                     }
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("Firestore Debug", "Error fetching data: " + e.getMessage());
                 });
     }
 }

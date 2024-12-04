@@ -63,15 +63,15 @@ public class RunningResultActivity extends AppCompatActivity implements OnMapRea
         displayDistance(totalDistance);
 
         btnCreateCourse.setOnClickListener(v -> {
-            if (totalDistance < 0.5) {
-                Toast.makeText(this, "이동거리 500m 이상만 가능합니다.", Toast.LENGTH_SHORT).show();
-            } else {
+//            if (totalDistance < 0.1) {
+//                Toast.makeText(this, "이동거리 100m 이상만 가능합니다.", Toast.LENGTH_SHORT).show();
+//            } else {
                 Intent courseIntent = new Intent(this, CourseRegisterActivity.class);
                 courseIntent.putParcelableArrayListExtra("ROUTE_POINTS", new ArrayList<>(routePoints));
                 courseIntent.putExtra("TOTAL_DISTANCE", totalDistance);
                 startActivity(courseIntent);
                 finish();
-            }
+//            }
         });
 
         btnExit.setOnClickListener(v -> {

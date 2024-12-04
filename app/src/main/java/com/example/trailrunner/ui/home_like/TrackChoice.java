@@ -1,8 +1,10 @@
 package com.example.trailrunner.ui.home_like;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -57,7 +59,7 @@ public class TrackChoice extends RecyclerView.Adapter<TrackChoice.ViewHolder>
             notifyItemRangeChanged(position, items.size());
 
             if (removedListener != null) {
-                removedListener.onItemRemoved(removedItem.getMountain());
+                removedListener.onItemRemoved(removedItem.getCourseName());
             }
         }
     }
@@ -86,6 +88,7 @@ public class TrackChoice extends RecyclerView.Adapter<TrackChoice.ViewHolder>
         private final TextView textView;
         private final TextView textView2;
         private final TextView textView3;
+        private final Button button;
         private final ImageButton imageButton;
 
         public ViewHolder(View itemView) {
@@ -94,10 +97,13 @@ public class TrackChoice extends RecyclerView.Adapter<TrackChoice.ViewHolder>
             textView = itemView.findViewById(R.id.textView);
             textView2 = itemView.findViewById(R.id.textView2);
             textView3 = itemView.findViewById(R.id.textView3);
+            button = itemView.findViewById(R.id.button);
             imageButton = itemView.findViewById(R.id.imageButton);
 
             // 아이템 클릭 이벤트
-            itemView.setOnClickListener(view -> {
+            button.setOnClickListener(view -> {
+                Intent intent = new Intent(button.getContext(), CourseActivity.class);
+                button.getContext().startActivity(intent);
             });
 
             // 삭제 버튼 이벤트
@@ -106,7 +112,7 @@ public class TrackChoice extends RecyclerView.Adapter<TrackChoice.ViewHolder>
         }
 
         public void setItem(Track item) {
-            textView.setText(item.getMountain());
+            textView.setText(item.getCourseName());
             textView2.setText(item.getDistance());
             textView3.setText(item.getDifficulty());
             imageView.setImageResource(R.drawable.mt); // 산 이미지로 설정
