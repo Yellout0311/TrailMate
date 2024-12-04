@@ -36,6 +36,12 @@ public class CourseRegisterActivity extends AppCompatActivity {
         Button btnUpload = findViewById(R.id.btn_upload);
         TextView textView = findViewById(R.id.total_distance_textview);
         nameTextView = findViewById(R.id.et_course_name);
+
+        // 이동거리 알맞게 수정
+        totalDistance = totalDistance/1000;
+        String formattedDistance = String.format("%.1f", totalDistance);
+        totalDistance = Double.parseDouble(formattedDistance);
+
         textView.setText("거리: " + totalDistance + "km");
 
 
