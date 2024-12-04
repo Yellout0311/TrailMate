@@ -73,8 +73,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
         View bottomSheet = view.findViewById(R.id.bottomSheet);
         BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bottomSheet);
-        behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        behavior.setPeekHeight(300); // 초기에 보여질 높이
+        behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        behavior.setPeekHeight(400); // 초기에 보여질 높이
         behavior.setMaxHeight(ViewGroup.LayoutParams.MATCH_PARENT); // 최대 높이
 
         ViewCompat.setOnApplyWindowInsetsListener(view.findViewById(R.id.main), (v, insets) -> {
