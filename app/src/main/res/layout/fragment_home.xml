@@ -36,10 +36,19 @@
     <LinearLayout
         android:id="@+id/bottomSheet"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#FFFFFF"
+        android:layout_height="match_parent"
+        android:background="@drawable/bottom_sheet_background"
         android:orientation="vertical"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <!-- 드래그 핸들 추가 -->
+        <View
+            android:layout_width="32dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="12dp"
+            android:background="#DDDDDD"
+            android:backgroundTint="#BBBBBB" />
 
         <!-- bottom sheet content -->
         <LinearLayout
@@ -79,7 +88,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/homerecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:layout_marginTop="16dp"
                 android:padding="8dp"/>
 
