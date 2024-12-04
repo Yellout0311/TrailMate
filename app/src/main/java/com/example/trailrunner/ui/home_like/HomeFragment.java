@@ -25,6 +25,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class HomeFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
@@ -73,8 +79,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
         View bottomSheet = view.findViewById(R.id.bottomSheet);
         BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bottomSheet);
-        behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        behavior.setPeekHeight(300); // 초기에 보여질 높이
+        behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        behavior.setPeekHeight(400); // 초기에 보여질 높이
         behavior.setMaxHeight(ViewGroup.LayoutParams.MATCH_PARENT); // 최대 높이
 
         ViewCompat.setOnApplyWindowInsetsListener(view.findViewById(R.id.main), (v, insets) -> {
@@ -88,15 +94,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         recyclerView.setLayoutManager(layoutManager);
         adapter = new TrackChoice();
 
-        adapter.addItem(new Track(R.drawable.mt, "북한산 백운대", "5", "easy"));
-        adapter.addItem(new Track(R.drawable.mt, "관악산 메인코스", "10", "normal"));
-        adapter.addItem(new Track(R.drawable.mt, "수락산 전망대", "8", "hard"));
-        adapter.addItem(new Track(R.drawable.mt, "북한산 백운대", "5", "easy"));
-        adapter.addItem(new Track(R.drawable.mt, "관악산 메인코스", "10", "normal"));
-        adapter.addItem(new Track(R.drawable.mt, "수락산 전망대", "8", "hard"));
-        adapter.addItem(new Track(R.drawable.mt, "북한산 백운대", "5", "easy"));
-        adapter.addItem(new Track(R.drawable.mt, "관악산 메인코스", "10", "normal"));
-        adapter.addItem(new Track(R.drawable.mt, "수락산 전망대", "8", "hard"));
+        getAllTracks(adapter);
+
         recyclerView.setAdapter(adapter);
 
 
@@ -153,4 +152,48 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     /*private void updateCountText() {
         count.setText("즐겨찾기 " + adapter.getItemCount() + "개");
     }*/
+
+    private void getAllTracks(TrackChoice adapter) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("courses")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    // 성공적으로 데이터를 가져온 경우
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        // Track 객체 리스트를 저장할 리스트
+                        List<Track> trackList = new ArrayList<>();
+
+                        // 모든 문서 확인
+                        for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            Log.d("Firestore Debug", "Document ID: " + documentSnapshot.getId());
+                            Log.d("Firestore Debug", "Document Data: " + documentSnapshot.getData());
+
+                            if (documentSnapshot.exists()) {
+                                // 문서 데이터를 Map으로 가져오기
+                                Map<String, Object> courseData = documentSnapshot.getData();
+
+                                if (courseData != null) {
+                                    // Track 객체 생성
+                                    Track track = new Track(courseData);
+
+                                    adapter.addItem(track);
+
+                                    trackList.add(track);
+                                }
+                            }
+                        }
+
+                        // 결과 확인
+                        for (Track track : trackList) {
+                            Log.d("Track Info", track.toString());
+                        }
+                    } else {
+                        Log.d("Firestore Debug", "No documents found in 'courses' collection.");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore Debug", "Error fetching data: " + e.getMessage());
+                });
+    }
 }
