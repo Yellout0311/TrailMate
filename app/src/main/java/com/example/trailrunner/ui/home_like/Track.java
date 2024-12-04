@@ -1,48 +1,107 @@
 package com.example.trailrunner.ui.home_like;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 public class Track {
-    int imageResourceId;
-    String mountain;
-    String distance;
-    String level;
+    private String courseName;
+    private double distance;
+    private String difficulty;
+    private List<LatLng> routePoints;
+    private String visibility;
 
-    public Track(int imageResourceId, String mountain, String diatance, String level) {
-        this.imageResourceId = imageResourceId;
-        this.mountain = mountain;
-        this.distance = diatance;
-        this.level = level;
-    }//생성자 추가
+    // Firestore 데이터 기반 생성자
+    public Track(Map<String, Object> courseData) {
+        try {
+            // 거리
+            this.distance = courseData.containsKey("distance") && courseData.get("distance") instanceof Number
+                    ? ((Number) courseData.get("distance")).doubleValue()
+                    : 0.0;
 
-    public int getImageResourceId() {
-        return imageResourceId;
+            // 난이도
+            this.difficulty = courseData.containsKey("difficulty") && courseData.get("difficulty") instanceof String
+                    ? (String) courseData.get("difficulty")
+                    : "N/A";
+
+            // 공개 여부
+            this.visibility = courseData.containsKey("visibility") && courseData.get("visibility") instanceof String
+                    ? (String) courseData.get("visibility")
+                    : "N/A";
+
+            // 경로 데이터 변환
+            this.routePoints = new ArrayList<>();
+            if (courseData.containsKey("routePoints") && courseData.get("routePoints") instanceof List) {
+                List<Map<String, Double>> routePointsData = (List<Map<String, Double>>) courseData.get("routePoints");
+                for (Map<String, Double> pointData : routePointsData) {
+                    double latitude = pointData.get("latitude");
+                    double longitude = pointData.get("longitude");
+                    this.routePoints.add(new LatLng(latitude, longitude));
+                }
+            }
+
+            // 산 이름 (임시 값)
+            this.courseName = courseData.containsKey("name") && courseData.get("name") instanceof String
+                    ? (String) courseData.get("name")
+                    : "Unknown Mountain";
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public void setImageResourceId(int imageResourceId) {
-        this.imageResourceId = imageResourceId;
+    // Getter & Setter 메서드
+    public String getCourseName() {
+        return courseName;
     }
 
-    public String getMountain() {
-        return mountain;
-    }
-
-    public void setMountain(String mountain) {
-        this.mountain = mountain;
+    public void setCourseName(String mountain) {
+        this.courseName = mountain;
     }
 
     public String getDistance() {
-        return distance +"km";
+        return distance + " km";
     }
 
-    public void setDistance(String distance) {
-        this.distance = this.distance;
+    public void setDistance(double distance) {
+        this.distance = distance;
     }
 
-    public String getLevel() {
-        return level;
+    public String getDifficulty() {
+        return difficulty;
     }
 
-    public void setLevel(String level) {
-        this.level = level;
+    public void setDifficulty(String difficulty) {
+        this.difficulty = difficulty;
     }
-    //get, set 메서드 추가
+
+    public List<LatLng> getRoutePoints() {
+        return routePoints;
+    }
+
+    public void setRoutePoints(List<LatLng> routePoints) {
+        this.routePoints = routePoints;
+    }
+
+    public String getVisibility() {
+        return visibility;
+    }
+
+    public void setVisibility(String visibility) {
+        this.visibility = visibility;
+    }
+
+    // 디버깅용 toString 메서드
+    @Override
+    public String toString() {
+        return "Track{" +
+                "mountain='" + courseName + '\'' +
+                ", distance=" + distance +
+                ", difficulty='" + difficulty + '\'' +
+                ", routePoints=" + routePoints +
+                ", visibility='" + visibility + '\'' +
+                '}';
+    }
 }

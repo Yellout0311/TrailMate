@@ -66,10 +66,6 @@ public class LikeFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         adapter = new TrackChoice();
 
-        adapter.addItem(new Track(R.drawable.mt, "북한산 백운대", "5", "easy"));
-        adapter.addItem(new Track(R.drawable.mt, "관악산 메인코스", "10", "normal"));
-        adapter.addItem(new Track(R.drawable.mt, "수락산 전망대", "8", "hard"));
-
         count = view.findViewById(R.id.textView5);
         count.setText("즐겨찾기 " + adapter.getItemCount() + "개");
 
@@ -77,7 +73,7 @@ public class LikeFragment extends Fragment {
 
         adapter.setOnItemClickListener((holder, itemView, position) -> {
             Track item = adapter.getItem(position);
-            Toast.makeText(getContext(), "코스 선택됨: " + item.getMountain(),
+            Toast.makeText(getContext(), "코스 선택됨: " + item.getCourseName(),
                     Toast.LENGTH_LONG).show();
         });
 
@@ -91,7 +87,6 @@ public class LikeFragment extends Fragment {
             String distance = editText2.getText().toString();
             String level = editText3.getText().toString();
 
-            adapter.addItem(new Track(R.drawable.mt, mountain, distance, level));
             adapter.notifyDataSetChanged();
             updateCountText();
         });
