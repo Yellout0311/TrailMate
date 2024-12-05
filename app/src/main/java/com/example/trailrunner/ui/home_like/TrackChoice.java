@@ -102,7 +102,9 @@ public class TrackChoice extends RecyclerView.Adapter<TrackChoice.ViewHolder>
 
             // 아이템 클릭 이벤트
             button.setOnClickListener(view -> {
+                int position = getAdapterPosition();
                 Intent intent = new Intent(button.getContext(), CourseActivity.class);
+                intent.putExtra("TRACK_POSITION", position);
                 button.getContext().startActivity(intent);
             });
 
