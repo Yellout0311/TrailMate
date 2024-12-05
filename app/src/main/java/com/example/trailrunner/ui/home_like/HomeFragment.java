@@ -14,6 +14,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,7 +38,21 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
     RecyclerView recyclerView;
     TrackChoice adapter;
-    TextView count;
+    public static boolean isCurrentFragment = true;
+    private TrackViewModel viewModel;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        isCurrentFragment = true;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        isCurrentFragment = false;
+    }
+
 
     public static HomeFragment newInstance(String param1, String param2) {
         HomeFragment fragment = new HomeFragment();
@@ -55,7 +70,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             String param1 = getArguments().getString("param1");
             String param2 = getArguments().getString("param2");
             // 전달받은 파라미터 처리
-        }
+        }viewModel = new ViewModelProvider(requireActivity()).get(TrackViewModel.class);
     }
 
     @Nullable
@@ -92,51 +107,15 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         recyclerView = view.findViewById(R.id.homerecyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new TrackChoice();
 
+        adapter = new TrackChoice();
+        adapter.setFragment(this);
+        getAllTracks(adapter);
+        recyclerView.setAdapter(adapter);
+
+        adapter = new TrackChoice();
         getAllTracks(adapter);
 
-        recyclerView.setAdapter(adapter);
-
-
-        /*count = view.findViewById(R.id.textView5);
-        count.setText("즐겨찾기 " + adapter.getItemCount() + "개");
-
-        recyclerView.setAdapter(adapter);
-
-        adapter.setOnItemClickListener((holder, itemView, position) -> {
-            Track item = adapter.getItem(position);
-            Toast.makeText(getContext(), "코스 선택됨: " + item.getMountain(),
-                    Toast.LENGTH_LONG).show();
-        });
-
-        EditText editText = view.findViewById(R.id.editTextText);
-        EditText editText2 = view.findViewById(R.id.editTextText2);
-        EditText editText3 = view.findViewById(R.id.editTextText3);
-
-        Button button = view.findViewById(R.id.button2);
-        button.setOnClickListener(v -> {
-            String mountain = editText.getText().toString();
-            String distance = editText2.getText().toString();
-            String level = editText3.getText().toString();
-
-            adapter.addItem(new Track(R.drawable.mt, mountain, distance, level));
-            adapter.notifyDataSetChanged();
-            updateCountText();
-        });
-
-        adapter.setOnItemRemovedListener(mountain -> {
-            Toast.makeText(getContext(), mountain + ": 즐겨찾기에서 제거되었습니다", Toast.LENGTH_SHORT).show();
-            updateCountText();
-        });
-
-        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onChanged() {
-                super.onChanged();
-                updateCountText();
-            }
-        });*/
     }
 
     @Override
@@ -148,10 +127,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         mMap.addMarker(new MarkerOptions().position(seoul).title("Seoul"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(seoul, 15));
     }
-
-    /*private void updateCountText() {
-        count.setText("즐겨찾기 " + adapter.getItemCount() + "개");
-    }*/
 
     private void getAllTracks(TrackChoice adapter) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();

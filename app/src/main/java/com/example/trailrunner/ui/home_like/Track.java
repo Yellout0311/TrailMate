@@ -12,10 +12,12 @@ public class Track {
     private String difficulty;
     private List<LatLng> routePoints;
     private String visibility;
+    private boolean isFavorite;
 
     // Firestore 데이터 기반 생성자
     public Track(Map<String, Object> courseData) {
         try {
+            this.isFavorite = isFavorite();
             // 거리
             this.distance = courseData.containsKey("distance") && courseData.get("distance") instanceof Number
                     ? ((Number) courseData.get("distance")).doubleValue()
@@ -91,6 +93,12 @@ public class Track {
 
     public void setVisibility(String visibility) {
         this.visibility = visibility;
+    }
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
     }
 
     // 디버깅용 toString 메서드
