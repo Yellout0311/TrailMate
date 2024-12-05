@@ -21,6 +21,7 @@ public class CourseRegisterActivity extends AppCompatActivity {
 
     private List<LatLng> routePoints;
     private double totalDistance;
+    private TextView nameTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +35,13 @@ public class CourseRegisterActivity extends AppCompatActivity {
         Spinner visibilitySpinner = findViewById(R.id.spinner_visibility);
         Button btnUpload = findViewById(R.id.btn_upload);
         TextView textView = findViewById(R.id.total_distance_textview);
+        nameTextView = findViewById(R.id.et_course_name);
+
+        // 이동거리 알맞게 수정
+        totalDistance = totalDistance/1000;
+        String formattedDistance = String.format("%.1f", totalDistance);
+        totalDistance = Double.parseDouble(formattedDistance);
+
         textView.setText("거리: " + totalDistance + "km");
 
 
@@ -73,6 +81,7 @@ public class CourseRegisterActivity extends AppCompatActivity {
 
         // 업로드할 데이터 준비
         Map<String, Object> courseData = new HashMap<>();
+        courseData.put("name", nameTextView.getText().toString());
         courseData.put("distance", totalDistance);
         courseData.put("routePoints", routePointsData);
         courseData.put("difficulty", ((Spinner) findViewById(R.id.spinner_difficulty)).getSelectedItem().toString());

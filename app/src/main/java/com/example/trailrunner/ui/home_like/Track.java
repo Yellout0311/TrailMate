@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public class Track {
-    private String mountain;
+    private String courseName;
     private double distance;
     private String difficulty;
     private List<LatLng> routePoints;
@@ -63,8 +63,8 @@ public class Track {
             }
 
             // 산 이름 (임시 값)
-            this.mountain = courseData.containsKey("mountain") && courseData.get("mountain") instanceof String
-                    ? (String) courseData.get("mountain")
+            this.courseName = courseData.containsKey("name") && courseData.get("name") instanceof String
+                    ? (String) courseData.get("name")
                     : "Unknown Mountain";
 
         } catch (Exception e) {
@@ -73,12 +73,12 @@ public class Track {
     }
 
     // Getter & Setter 메서드
-    public String getMountain() {
-        return mountain;
+    public String getCourseName() {
+        return courseName;
     }
 
-    public void setMountain(String mountain) {
-        this.mountain = mountain;
+    public void setCourseName(String mountain) {
+        this.courseName = mountain;
     }
 
     public String getDistance() {
@@ -123,7 +123,7 @@ public class Track {
     @Override
     public String toString() {
         return "Track{" +
-                "mountain='" + mountain + '\'' +
+                "mountain='" + courseName + '\'' +
                 ", distance=" + distance +
                 ", difficulty='" + difficulty + '\'' +
                 ", routePoints=" + routePoints +

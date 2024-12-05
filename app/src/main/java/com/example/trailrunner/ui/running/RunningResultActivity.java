@@ -57,14 +57,14 @@ public class RunningResultActivity extends AppCompatActivity implements OnMapRea
         minutes = minutes % 60;
         tvTime.setText(String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds));
 
-        totalDistance = intent.getDoubleExtra("TOTAL_DISTANCE", 0.0);
+        totalDistance = intent.getFloatExtra("TOTAL_DISTANCE", 0);
         routePoints = intent.getParcelableArrayListExtra("ROUTE_POINTS");
 
         displayDistance(totalDistance);
 
         btnCreateCourse.setOnClickListener(v -> {
-            if (totalDistance < 0.5) {
-                Toast.makeText(this, "이동거리 500m 이상만 가능합니다.", Toast.LENGTH_SHORT).show();
+            if (totalDistance < 0.1) {
+                Toast.makeText(this, "이동거리 100m 이상만 가능합니다.", Toast.LENGTH_SHORT).show();
             } else {
                 Intent courseIntent = new Intent(this, CourseRegisterActivity.class);
                 courseIntent.putParcelableArrayListExtra("ROUTE_POINTS", new ArrayList<>(routePoints));

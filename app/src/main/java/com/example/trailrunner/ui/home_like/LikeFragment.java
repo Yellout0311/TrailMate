@@ -105,7 +105,7 @@ public class LikeFragment extends Fragment {
 
         adapter.setOnItemClickListener((holder, itemView, position) -> {
             Track item = adapter.getItem(position);
-            Toast.makeText(getContext(), "코스 선택됨: " + item.getMountain(),
+            Toast.makeText(getContext(), "코스 선택됨: " + item.getCourseName(),
                     Toast.LENGTH_LONG).show();
         });
 
