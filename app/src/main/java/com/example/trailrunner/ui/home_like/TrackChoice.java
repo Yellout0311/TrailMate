@@ -88,7 +88,7 @@ public class TrackChoice extends RecyclerView.Adapter<TrackChoice.ViewHolder>
             notifyItemRangeChanged(position, items.size());
 
             if (removedListener != null) {
-                removedListener.onItemRemoved(removedItem.getMountain());
+                removedListener.onItemRemoved(removedItem.getCourseName());
             }
         }
     }
@@ -115,7 +115,7 @@ public class TrackChoice extends RecyclerView.Adapter<TrackChoice.ViewHolder>
     public void addFavorite(Track track) {
         if (track.isFavorite() && !favoriteItems.contains(track)) {
             favoriteItems.add(track);
-            Log.d("TrackChoice", "Added to favorites: " + track.getMountain());
+            Log.d("TrackChoice", "Added to favorites: " + track.getCourseName());
         }
         notifyDataSetChanged();  // RecyclerView 갱신
         FavoriteUtils.saveFavorites(context, favoriteItems);
@@ -124,19 +124,19 @@ public class TrackChoice extends RecyclerView.Adapter<TrackChoice.ViewHolder>
     public void removeFavorite(Track track) {
         // isFavorite가 true일 때만 제거
         if (!track.isFavorite()) {
-            Log.d("TrackChoice", "Removing from favorites: " + track.getMountain());
+            Log.d("TrackChoice", "Removing from favorites: " + track.getCourseName());
 
             if (favoriteItems.contains(track)) {
                 favoriteItems.remove(track);  // 리스트에서 제거
-                Log.d("TrackChoice", "Successfully removed: " + track.getMountain());
+                Log.d("TrackChoice", "Successfully removed: " + track.getCourseName());
             } else {
-                Log.d("TrackChoice", "Track not found in favorites: " + track.getMountain());
+                Log.d("TrackChoice", "Track not found in favorites: " + track.getCourseName());
             }
 
             // 현재 프래그먼트가 LikeFragment일 때만 items에서 제거
             if (isCurrentFragment && !track.isFavorite()) {
                 items.remove(track);  // items에서 제거 (선택적으로)
-                Log.d("TrackChoice", "Removed from items: " + track.getMountain());
+                Log.d("TrackChoice", "Removed from items: " + track.getCourseName());
             }
 
             // RecyclerView 갱신
@@ -195,7 +195,7 @@ public class TrackChoice extends RecyclerView.Adapter<TrackChoice.ViewHolder>
 
 
         public void setItem(Track item) {
-            textView.setText(item.getMountain());
+            textView.setText(item.getCourseName());
             textView2.setText(item.getDistance());
             textView3.setText(item.getDifficulty());
             imageView.setImageResource(R.drawable.mt); // 산 이미지로 설정
@@ -231,10 +231,10 @@ public class TrackChoice extends RecyclerView.Adapter<TrackChoice.ViewHolder>
 
                     if (currentTrack.isFavorite()) {
                         adapter.addFavorite(currentTrack);
-                        Log.d("TrackChoice", "Added to favorites: " + currentTrack.getMountain());
+                        Log.d("TrackChoice", "Added to favorites: " + currentTrack.getCourseName());
                     } else {
                         adapter.removeFavorite(currentTrack); // 제거 메서드 호출
-                        Log.d("TrackChoice", "Removed from favorites: " + currentTrack.getMountain());
+                        Log.d("TrackChoice", "Removed from favorites: " + currentTrack.getCourseName());
                     }
 
                     // UI 업데이트

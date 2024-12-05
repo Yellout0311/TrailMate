@@ -20,7 +20,7 @@ public class Track {
         if (obj == null || getClass() != obj.getClass()) return false;
         Track track = (Track) obj;
         return Double.compare(track.distance, distance) == 0 &&
-                Objects.equals(mountain, track.mountain) &&
+                Objects.equals(courseName, track.courseName) &&
                 Objects.equals(difficulty, track.difficulty) &&
                 Objects.equals(visibility, track.visibility) &&
                 Objects.equals(routePoints, track.routePoints);
@@ -28,7 +28,7 @@ public class Track {
 
     @Override
     public int hashCode() {
-        return Objects.hash(mountain, distance, difficulty, routePoints, visibility);
+        return Objects.hash(courseName, distance, difficulty, routePoints, visibility);
     }
 
 

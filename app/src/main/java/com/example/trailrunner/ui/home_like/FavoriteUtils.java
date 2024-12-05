@@ -48,7 +48,7 @@ public class FavoriteUtils {
         // 즐겨찾기 리스트에서 해당 Track을 제거
         if (favoriteItems.contains(trackToRemove)) {
             favoriteItems.remove(trackToRemove);
-            Log.d("FavoriteUtils", "Removed from favorites: " + trackToRemove.getMountain());
+            Log.d("FavoriteUtils", "Removed from favorites: " + trackToRemove.getCourseName());
 
             // 수정된 리스트를 다시 저장
             saveFavorites(context, favoriteItems);
