@@ -2,7 +2,6 @@ package com.example.trailrunner.ui.profile;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,22 +13,13 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.trailrunner.EmailPasswordActivity;
-import com.example.trailrunner.MainActivity;
 import com.example.trailrunner.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.auth.FirebaseUser;
 
 public class ProfileFragment extends Fragment {
 
     private FirebaseAuth mAuth;
-    private FirebaseFirestore mStore;
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -62,40 +52,29 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        mStore = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
         Button logout = view.findViewById(R.id.button_logout);
         TextView nickname = view.findViewById(R.id.button_nickname);
 
-        CollectionReference usersRef = mStore.collection("users");
-
-        if (mAuth.getCurrentUser() != null) {
-            String uid = mAuth.getCurrentUser().getUid();
-            usersRef.whereEqualTo("documentId", uid)
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful() && !task.getResult().isEmpty()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    String nicknameValue = document.getString("nickname");
-                                    nickname.setText(nicknameValue);
-                                }
-                            }
-                        }
-                    });
+        // 현재 사용자가 로그인되어 있다면
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            String displayName = user.getDisplayName();
+            if (displayName != null && !displayName.isEmpty()) {
+                nickname.setText(displayName);
+            } else {
+                nickname.setText("닉네임 없음"); // displayName이 없을 경우 처리
+            }
+        } else {
+            nickname.setText("사용자 정보 없음"); // 로그인되지 않았을 경우 처리
         }
 
-
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAuth.signOut();
-                Intent intent = new Intent(getActivity(), EmailPasswordActivity.class);
-                startActivity(intent);
-                getActivity().finish();
-            }
+        logout.setOnClickListener(v -> {
+            mAuth.signOut();
+            Intent intent = new Intent(getActivity(), EmailPasswordActivity.class);
+            startActivity(intent);
+            getActivity().finish();
         });
 
         return view;
