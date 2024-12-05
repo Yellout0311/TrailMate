@@ -75,14 +75,14 @@
                     android:id="@+id/btnPopular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="인기"
+                    android:text="찜"
                     android:layout_marginEnd="8dp"/>
 
                 <Button
                     android:id="@+id/btnNew"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="새로운"/>
+                    android:text="내 코스"/>
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
