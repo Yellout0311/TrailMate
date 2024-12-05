@@ -2,6 +2,9 @@ package com.example.trailrunner.ui.home_like;
 
 import static com.example.trailrunner.ui.home_like.LikeFragment.isCurrentFragment;
 
+import static java.security.AccessController.getContext;
+
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +31,7 @@ public class TrackChoice extends RecyclerView.Adapter<TrackChoice.ViewHolder>
     private OnItemRemovedListener removedListener;
     private static final ArrayList<Track> favoriteItems = new ArrayList<>(); // 즐겨찾기 객체 리스트
     private Fragment currentFragment;  // 현재 프래그먼트 저장
+    private Context context;
 
 
 
@@ -39,11 +43,6 @@ public class TrackChoice extends RecyclerView.Adapter<TrackChoice.ViewHolder>
         return new ViewHolder(itemView,this);
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
-        Track item = items.get(position);
-        viewHolder.setItem(item);
-    }
 
     @Override
     public int getItemCount() {
@@ -55,9 +54,32 @@ public class TrackChoice extends RecyclerView.Adapter<TrackChoice.ViewHolder>
     }
 
     public void addItem(Track item) {
+        // FavoriteUtils에서 즐겨찾기 항목을 가져옵니다.
+        ArrayList<Track> favoriteItems = FavoriteUtils.loadFavorites(context);
+
+        // 즐겨찾기 목록에 있는 항목이면 isFavorite를 true로 설정
+        if (favoriteItems.contains(item)) {
+            item.setFavorite(true);  // isFavorite 필드를 true로 설정
+        }
+
         items.add(item);
         notifyItemInserted(items.size() - 1);
     }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
+        Track item = items.get(position);
+        viewHolder.setItem(item);
+
+        // 즐겨찾기 상태에 따라 노란 별 또는 빈 별 아이콘을 설정
+        if (item.isFavorite()) {
+            viewHolder.imageButton.setImageResource(android.R.drawable.btn_star_big_on); // 노란 별
+        } else {
+            viewHolder.imageButton.setImageResource(android.R.drawable.btn_star_big_off); // 빈 별
+        }
+    }
+
+
 
     public void removeItem(int position) {
         if (position != RecyclerView.NO_POSITION) {
@@ -95,6 +117,8 @@ public class TrackChoice extends RecyclerView.Adapter<TrackChoice.ViewHolder>
             favoriteItems.add(track);
             Log.d("TrackChoice", "Added to favorites: " + track.getMountain());
         }
+        notifyDataSetChanged();  // RecyclerView 갱신
+        FavoriteUtils.saveFavorites(context, favoriteItems);
     }
 
     public void removeFavorite(Track track) {
@@ -115,12 +139,13 @@ public class TrackChoice extends RecyclerView.Adapter<TrackChoice.ViewHolder>
                 Log.d("TrackChoice", "Removed from items: " + track.getMountain());
             }
 
+            // RecyclerView 갱신
             notifyDataSetChanged();  // RecyclerView 갱신
+
+            // 즐겨찾기 목록을 저장
+            FavoriteUtils.saveFavorites(context, favoriteItems);  // context 사용
         }
     }
-
-
-
 
     public void setTrackList(List<Track> newTrackList) {
         newTrackList = new ArrayList<>(newTrackList);
@@ -145,6 +170,16 @@ public class TrackChoice extends RecyclerView.Adapter<TrackChoice.ViewHolder>
 
     public void setFragment(Fragment fragment) {
         this.currentFragment = fragment;
+    }
+    // TrackChoice 생성자에 context를 전달받기
+    public TrackChoice(Context context) {
+        this.context = context;
+    }
+
+    // 즐겨찾기 저장 후 RecyclerView 갱신
+    public void saveFavoritesAndNotify() {
+        notifyDataSetChanged();  // RecyclerView 갱신
+        FavoriteUtils.saveFavorites(context, favoriteItems);  // context 사용
     }
 
 

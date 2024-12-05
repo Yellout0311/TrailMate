@@ -5,6 +5,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class Track {
     private String mountain;
@@ -13,6 +14,23 @@ public class Track {
     private List<LatLng> routePoints;
     private String visibility;
     private boolean isFavorite;
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Track track = (Track) obj;
+        return Double.compare(track.distance, distance) == 0 &&
+                Objects.equals(mountain, track.mountain) &&
+                Objects.equals(difficulty, track.difficulty) &&
+                Objects.equals(visibility, track.visibility) &&
+                Objects.equals(routePoints, track.routePoints);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(mountain, distance, difficulty, routePoints, visibility);
+    }
+
 
     // Firestore 데이터 기반 생성자
     public Track(Map<String, Object> courseData) {

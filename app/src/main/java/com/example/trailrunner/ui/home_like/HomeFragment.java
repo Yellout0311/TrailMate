@@ -39,13 +39,20 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     RecyclerView recyclerView;
     TrackChoice adapter;
     public static boolean isCurrentFragment = true;
-    private TrackViewModel viewModel;
 
     @Override
     public void onResume() {
         super.onResume();
-        isCurrentFragment = true;
+        // 즐겨찾기 목록을 최신 상태로 갱신
+        ArrayList<Track> updatedFavorites = FavoriteUtils.loadFavorites(getContext());
+
+        // TrackChoice의 인스턴스를 통해 updateFavoriteItems() 호출
+        if (adapter != null) {
+            adapter.updateFavoriteItems(updatedFavorites);
+        }
     }
+
+
 
     @Override
     public void onPause() {
@@ -70,7 +77,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             String param1 = getArguments().getString("param1");
             String param2 = getArguments().getString("param2");
             // 전달받은 파라미터 처리
-        }viewModel = new ViewModelProvider(requireActivity()).get(TrackViewModel.class);
+        }
     }
 
     @Nullable
@@ -108,12 +115,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new TrackChoice();
+        TrackChoice adapter = new TrackChoice(getContext());  // getContext() 사용
+        recyclerView.setAdapter(adapter);
         adapter.setFragment(this);
         getAllTracks(adapter);
         recyclerView.setAdapter(adapter);
 
-        adapter = new TrackChoice();
+        adapter = new TrackChoice(getContext());
         getAllTracks(adapter);
 
     }
@@ -134,26 +142,26 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         db.collection("courses")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    // 성공적으로 데이터를 가져온 경우
                     if (!queryDocumentSnapshots.isEmpty()) {
                         // Track 객체 리스트를 저장할 리스트
                         List<Track> trackList = new ArrayList<>();
 
-                        // 모든 문서 확인
-                        for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                            Log.d("Firestore Debug", "Document ID: " + documentSnapshot.getId());
-                            Log.d("Firestore Debug", "Document Data: " + documentSnapshot.getData());
+                        // FavoriteUtils에서 즐겨찾기 목록 불러오기
+                        ArrayList<Track> favoriteItems = FavoriteUtils.loadFavorites(getContext());
 
+                        for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                             if (documentSnapshot.exists()) {
-                                // 문서 데이터를 Map으로 가져오기
                                 Map<String, Object> courseData = documentSnapshot.getData();
 
                                 if (courseData != null) {
-                                    // Track 객체 생성
                                     Track track = new Track(courseData);
 
-                                    adapter.addItem(track);
+                                    // 즐겨찾기 목록에 있는 항목이면 isFavorite를 true로 설정
+                                    if (favoriteItems.contains(track)) {
+                                        track.setFavorite(true);
+                                    }
 
+                                    adapter.addItem(track);
                                     trackList.add(track);
                                 }
                             }
@@ -172,3 +180,4 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 });
     }
 }
+
