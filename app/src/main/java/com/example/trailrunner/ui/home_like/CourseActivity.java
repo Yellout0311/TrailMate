@@ -1,6 +1,8 @@
 package com.example.trailrunner.ui.home_like;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -35,6 +37,7 @@ public class CourseActivity extends AppCompatActivity {
     private EditText reviewInput;
     private RatingBar ratingBar;
     private Button submitReviewButton;
+    private Button startButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,8 @@ public class CourseActivity extends AppCompatActivity {
         reviewInput = findViewById(R.id.reviewInput);
         ratingBar = findViewById(R.id.ratingBar);
         submitReviewButton = findViewById(R.id.submitReviewButton);
+        startButton = findViewById(R.id.button);
+
 
         reviewList = new ArrayList<>();
         reviewAdapter = new ReviewAdapter(this, reviewList);
@@ -56,6 +61,15 @@ public class CourseActivity extends AppCompatActivity {
         reviewRecyclerView.setAdapter(reviewAdapter);
 
         submitReviewButton.setOnClickListener(v -> submitReview());
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CourseActivity.this, NavigationActivity.class);
+                intent.putExtra("COURSE_ID", courseDocumentId);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         fetchTrackData(position);
     }

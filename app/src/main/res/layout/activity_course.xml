@@ -67,9 +67,20 @@
                         android:text="level"
                         android:textColor="#009688"
                         android:textSize="24sp" />
+
                 </LinearLayout>
 
             </LinearLayout>
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16sp"
+                android:layout_weight="6"
+                android:backgroundTint="#009688"
+                android:text="start"
+                android:textSize="12sp" />
 
         </LinearLayout>
 
