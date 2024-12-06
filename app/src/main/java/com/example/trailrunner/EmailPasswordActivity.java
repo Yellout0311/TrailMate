@@ -18,7 +18,6 @@ public class EmailPasswordActivity extends AppCompatActivity {
 
     private static final String TAG = "EmailPasswordActivity";
     private FirebaseAuth mAuth;
-
     private EditText emailEditText;
     private EditText passwordEditText;
     private Button loginButton;
@@ -68,17 +67,17 @@ public class EmailPasswordActivity extends AppCompatActivity {
 
     private void signIn(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        Log.d(TAG, "signInWithEmail:success");
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        Toast.makeText(this, "로그인 성공!", Toast.LENGTH_SHORT).show();
-                        moveToHome();
-                    } else {
-                        Log.w(TAG, "signInWithEmail:failure", task.getException());
-                        Toast.makeText(this, "로그인 실패: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+            .addOnCompleteListener(this, task -> {
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "signInWithEmail:success");
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    Toast.makeText(this, "로그인 성공!", Toast.LENGTH_SHORT).show();
+                    moveToHome();
+                } else {
+                    Log.w(TAG, "signInWithEmail:failure", task.getException());
+                    Toast.makeText(this, "로그인 실패: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
     }
 
     private void moveToHome() {
