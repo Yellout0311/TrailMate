@@ -6,22 +6,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -58,43 +50,28 @@ public class RegisterActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
                             if (user != null) {
-                                // Firestore에 닉네임 저장
-                                saveUserNickname(user.getUid(), nickname);
+                                // 사용자 프로필 업데이트: 닉네임 설정
+                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                        .setDisplayName(nickname) // displayName 설정
+                                        .build();
 
-                                // 성공 메시지 및 다른 화면으로 이동
-                                Toast.makeText(this, "회원가입 성공!", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(this, MainActivity.class);
-                                startActivity(intent);
-                                finish();
+                                user.updateProfile(profileUpdates)
+                                        .addOnCompleteListener(profileTask -> {
+                                            if (profileTask.isSuccessful()) {
+                                                // 성공 메시지 및 다른 화면으로 이동
+                                                Toast.makeText(this, "회원가입 성공!", Toast.LENGTH_SHORT).show();
+                                                Intent intent = new Intent(this, MainActivity.class);
+                                                startActivity(intent);
+                                                finish();
+                                            } else {
+                                                Toast.makeText(this, "프로필 업데이트 실패: " + profileTask.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
                             }
                         } else {
                             Toast.makeText(this, "회원가입 실패: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
         });
-    }
-
-    private void saveUserNickname(String userId, String nickname) {
-        // Firestore 인스턴스 가져오기
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        // 사용자 정보를 저장할 문서 참조
-        Map<String, Object> user = new HashMap<>();
-        user.put("nickname", nickname);
-        user.put("documentId", userId);
-
-        // 사용자 정보 Firestore에 저장
-        db.collection("users")
-                .add(user)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                    }
-                });
     }
 }
