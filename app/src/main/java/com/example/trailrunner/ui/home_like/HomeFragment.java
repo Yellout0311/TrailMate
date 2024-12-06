@@ -130,10 +130,29 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
 
-        // 서울 위치
-        LatLng seoul = new LatLng(37.5665, 126.9780);
-        mMap.addMarker(new MarkerOptions().position(seoul).title("Seoul"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(seoul, 15));
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("courses")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                        List<Map<String, Double>> points = (List<Map<String, Double>>) doc.get("routePoints");
+                        if (points != null && !points.isEmpty()) {
+                            // 첫 번째 포인트(시작점)의 위치로 설정
+                            Map<String, Double> startPoint = points.get(0);
+                            LatLng start = new LatLng(startPoint.get("latitude"), startPoint.get("longitude"));
+
+                            // 마커 추가
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(start)
+                                    .title("코스: " + (doc.getString("courseName") != null ?
+                                            doc.getString("courseName") : doc.getId())));
+                        }
+                    }
+
+                    // 첨에 서울로 카메라 띄움
+                    LatLng seoul = new LatLng(37.5665, 126.9780);
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(seoul, 12));
+                });
     }
 
     private void getAllTracks(TrackChoice adapter) {
