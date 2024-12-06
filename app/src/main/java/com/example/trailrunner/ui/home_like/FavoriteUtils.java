@@ -11,7 +11,7 @@ import com.google.gson.Gson;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-public class FavoriteUtils {
+public class  FavoriteUtils {
 
     public static void saveFavorites(Context context, ArrayList<Track> favoriteItems) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("favorites", Context.MODE_PRIVATE);
