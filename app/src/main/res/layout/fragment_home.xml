@@ -61,16 +61,8 @@
                     android:layout_height="wrap_content"
                     android:text="전체"
                     android:layout_marginEnd="8dp"/>
-
                 <Button
-                    android:id="@+id/btnPopular"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="인기"
-                    android:layout_marginEnd="8dp"/>
-
-                <Button
-                    android:id="@+id/btnNew"
+                    android:id="@+id/btnMycourse"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="내 코스"/>
