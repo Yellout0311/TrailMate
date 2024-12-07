@@ -144,8 +144,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                             // 마커 추가
                             mMap.addMarker(new MarkerOptions()
                                     .position(start)
-                                    .title("코스: " + (doc.getString("courseName") != null ?
-                                            doc.getString("courseName") : doc.getId())));
+                                    .title("코스: " + (doc.getString("name") != null ?
+                                            doc.getString("name") : doc.getId())));
                         }
                     }
 
