@@ -109,20 +109,6 @@ public class LikeFragment extends Fragment {
                     Toast.LENGTH_LONG).show();
         });
 
-        EditText editText = view.findViewById(R.id.editTextText);
-        EditText editText2 = view.findViewById(R.id.editTextText2);
-        EditText editText3 = view.findViewById(R.id.editTextText3);
-
-        Button button = view.findViewById(R.id.button2);
-        button.setOnClickListener(v -> {
-            String mountain = editText.getText().toString();
-            String distance = editText2.getText().toString();
-            String level = editText3.getText().toString();
-
-            adapter.notifyDataSetChanged();
-            updateCountText();
-        });
-
         adapter.setOnItemRemovedListener(mountain -> {
             Toast.makeText(getContext(), mountain + ": 즐겨찾기에서 제거되었습니다", Toast.LENGTH_SHORT).show();
             updateCountText();
