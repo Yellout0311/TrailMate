@@ -60,6 +60,23 @@ public class CourseActivity extends AppCompatActivity {
         reviewRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         reviewRecyclerView.setAdapter(reviewAdapter);
 
+        if (getIntent().getBooleanExtra("MY_REVIEWS", false)) {
+            String userId = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+            db.collection("reviews")
+                    .whereEqualTo("userName", userId)
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        reviewList.clear();
+                        for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                            Review review = doc.toObject(Review.class);
+                            if (review != null) {
+                                reviewList.add(review);
+                            }
+                        }
+                        reviewAdapter.notifyDataSetChanged();
+                    });
+        }
+
         submitReviewButton.setOnClickListener(v -> submitReview());
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
