@@ -36,7 +36,7 @@ import java.util.Calendar;
 public class SettingsActivity extends AppCompatActivity {
     private NotificationManager notificationManager;
     private TimePicker exerciseTimePicker;
-    private Switch reviewNotificationSwitch;
+   // private Switch reviewNotificationSwitch;
     private AlarmManager alarmManager;
     private static final String CHANNEL_ID = "TRAILRUNNER_CHANNEL";
 
@@ -51,7 +51,7 @@ public class SettingsActivity extends AppCompatActivity {
         createNotificationChannel();
 
         exerciseTimePicker = findViewById(R.id.exerciseTimePicker);
-        reviewNotificationSwitch = findViewById(R.id.reviewNotificationSwitch);
+       // reviewNotificationSwitch = findViewById(R.id.reviewNotificationSwitch);
         View btnExit = findViewById(R.id.btnExit);
         btnExit.setOnClickListener(v -> finish());
         Button btnSaveTime = findViewById(R.id.btnSaveTime);
@@ -68,17 +68,17 @@ public class SettingsActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
         exerciseTimePicker.setHour(prefs.getInt("exercise_hour", 9));
         exerciseTimePicker.setMinute(prefs.getInt("exercise_minute", 0));
-        reviewNotificationSwitch.setChecked(prefs.getBoolean("review_notifications", true));
+        //reviewNotificationSwitch.setChecked(prefs.getBoolean("review_notifications", true));
 
         exerciseTimePicker.setOnTimeChangedListener((view, hour, minute) -> {
             setExerciseAlarm(hour, minute);
             saveSettings();
         });
 
-        reviewNotificationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            enableReviewNotifications(isChecked);
-            saveSettings();
-        });
+//        reviewNotificationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+//            enableReviewNotifications(isChecked);
+//            saveSettings();
+//        });
     }
 
     private void updateAlarmStatus() {
@@ -133,16 +133,16 @@ public class SettingsActivity extends AppCompatActivity {
         updateAlarmStatus();
     }
 
-    private void enableReviewNotifications(boolean enabled) {
-        SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
-        prefs.edit().putBoolean("review_notifications", enabled).apply();
-    }
+//    private void enableReviewNotifications(boolean enabled) {
+//        SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
+//        prefs.edit().putBoolean("review_notifications", enabled).apply();
+//    }
 
     private void saveSettings() {
         SharedPreferences.Editor editor = getSharedPreferences("Settings", MODE_PRIVATE).edit();
         editor.putInt("exercise_hour", exerciseTimePicker.getHour());
         editor.putInt("exercise_minute", exerciseTimePicker.getMinute());
-        editor.putBoolean("review_notifications", reviewNotificationSwitch.isChecked());
+       // editor.putBoolean("review_notifications", reviewNotificationSwitch.isChecked());
         editor.apply();
     }
 }
