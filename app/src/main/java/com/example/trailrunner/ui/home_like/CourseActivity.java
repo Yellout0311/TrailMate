@@ -46,7 +46,7 @@ public class CourseActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
 
-        int position = getIntent().getIntExtra("TRACK_POSITION", 0);
+        courseDocumentId = getIntent().getStringExtra("TRACK_DOCUMENT_ID");
 
         reviewRecyclerView = findViewById(R.id.reviewRecyclerView);
         reviewInput = findViewById(R.id.reviewInput);
@@ -77,6 +77,13 @@ public class CourseActivity extends AppCompatActivity {
                     });
         }
 
+        if (courseDocumentId != null) {
+            fetchTrackData(courseDocumentId);
+            fetchReviewsForCourse(courseDocumentId);
+        } else {
+            showError("Invalid course ID.");
+        }
+
         submitReviewButton.setOnClickListener(v -> submitReview());
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,37 +94,24 @@ public class CourseActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-        fetchTrackData(position);
     }
 
-    private void fetchTrackData(int position) {
+    private void fetchTrackData(String documentId) {
         db.collection("courses")
+                .document(documentId)
                 .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    if (!queryDocumentSnapshots.isEmpty()) {
-                        List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        courseName = documentSnapshot.getString("name");
+                        distance = documentSnapshot.getDouble("distance");
+                        difficulty = documentSnapshot.getString("difficulty");
 
-                        if (position < documents.size()) {
-                            DocumentSnapshot document = documents.get(position);
-
-                            courseName = document.getString("name");
-                            distance = document.getDouble("distance");
-                            difficulty = document.getString("difficulty");
-
-                            updateUI();
-
-                            // 선택된 코스의 도큐먼트 ID를 가져와서 리뷰를 불러옴
-                            courseDocumentId = document.getId();
-                            fetchReviewsForCourse(courseDocumentId);
-                        } else {
-                            showError("Invalid position.");
-                        }
+                        updateUI();
                     } else {
-                        showError("No courses available.");
+                        showError("Course not found.");
                     }
                 })
-                .addOnFailureListener(e -> showError("Failed to fetch courses."));
+                .addOnFailureListener(e -> showError("Failed to fetch course data."));
     }
 
     private void fetchReviewsForCourse(String courseDocumentId) {

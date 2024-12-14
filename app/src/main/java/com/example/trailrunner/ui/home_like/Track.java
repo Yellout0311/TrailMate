@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public class Track {
+    private String documentId;
     private String courseName;
     private double distance;
     private String difficulty;
@@ -35,7 +36,14 @@ public class Track {
     // Firestore 데이터 기반 생성자
     public Track(Map<String, Object> courseData) {
         try {
+            // DocumentId
+            this.documentId = courseData.containsKey("documentId") && courseData.get("documentId") instanceof String
+                    ? (String) courseData.get("documentId")
+                    : "N/A";
+
+            // 즐겨찾기
             this.isFavorite = isFavorite();
+
             // 거리
             this.distance = courseData.containsKey("distance") && courseData.get("distance") instanceof Number
                     ? ((Number) courseData.get("distance")).doubleValue()
@@ -73,6 +81,10 @@ public class Track {
     }
 
     // Getter & Setter 메서드
+    public String getDocumentId() {
+        return documentId;
+    }
+
     public String getCourseName() {
         return courseName;
     }

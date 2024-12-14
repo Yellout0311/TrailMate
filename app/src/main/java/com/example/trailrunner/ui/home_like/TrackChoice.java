@@ -184,6 +184,16 @@ public class TrackChoice extends RecyclerView.Adapter<TrackChoice.ViewHolder>
         FavoriteUtils.saveFavorites(context, favoriteItems);  // context 사용
     }
 
+    public Track findTrackByDocumentId(String documentId) {
+        for (Track track : items) {
+            if (track.getDocumentId().equals(documentId)) {
+                return track;
+            }
+        }
+        return null; // 해당 documentId를 가진 트랙이 없을 경우 null 반환
+    }
+
+
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         private final ImageView imageView;
@@ -193,9 +203,7 @@ public class TrackChoice extends RecyclerView.Adapter<TrackChoice.ViewHolder>
         private final ImageButton imageButton;
         private final Button button;
         private final TrackChoice adapter;
-
-
-
+        private String documentId; // 클릭 이벤트에서 사용할 documentId 필드 추가
 
         public void setItem(Track item) {
             textView.setText(item.getCourseName());
@@ -203,7 +211,9 @@ public class TrackChoice extends RecyclerView.Adapter<TrackChoice.ViewHolder>
             textView3.setText(item.getDifficulty());
             imageView.setImageResource(R.drawable.mt); // 산 이미지로 설정
 
-            boolean isFavorite = favoriteItems.contains(item);
+            // documentId 저장
+            this.documentId = item.getDocumentId();
+
             imageButton.setImageResource(
                     item.isFavorite() ? android.R.drawable.btn_star_big_on : android.R.drawable.btn_star_big_off
             );
@@ -219,41 +229,38 @@ public class TrackChoice extends RecyclerView.Adapter<TrackChoice.ViewHolder>
             button = itemView.findViewById(R.id.button);
             imageButton = itemView.findViewById(R.id.imageButton);
 
-            // 아이템 클릭 이벤트
+            // 아이템 클릭 이벤트에서 position 대신 documentId 사용
             button.setOnClickListener(view -> {
-                int position = getAdapterPosition();
                 Intent intent = new Intent(button.getContext(), CourseActivity.class);
-                intent.putExtra("TRACK_POSITION", position);
+                intent.putExtra("TRACK_DOCUMENT_ID", documentId); // 저장된 documentId 전달
                 button.getContext().startActivity(intent);
             });
 
-            // 즐겨찾기 버튼 클릭 시
+            // 즐겨찾기 버튼 클릭 이벤트
             imageButton.setOnClickListener(v -> {
-                int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION) {
-                    Track currentTrack = adapter.getItem(position);
-                    boolean isFavorite = currentTrack.isFavorite();
+                if (documentId != null) { // documentId가 설정된 경우만 처리
+                    Track currentTrack = adapter.findTrackByDocumentId(documentId);
+                    if (currentTrack != null) {
+                        boolean isFavorite = currentTrack.isFavorite();
 
-                    // 즐겨찾기 상태 토글
-                    currentTrack.setFavorite(!isFavorite);
+                        // 즐겨찾기 상태 토글
+                        currentTrack.setFavorite(!isFavorite);
 
-                    if (currentTrack.isFavorite()) {
-                        adapter.addFavorite(currentTrack);
-                        Log.d("TrackChoice", "Added to favorites: " + currentTrack.getCourseName());
-                    } else {
-                        adapter.removeFavorite(currentTrack); // 제거 메서드 호출
-                        Log.d("TrackChoice", "Removed from favorites: " + currentTrack.getCourseName());
+                        if (currentTrack.isFavorite()) {
+                            adapter.addFavorite(currentTrack);
+                            Log.d("TrackChoice", "Added to favorites: " + currentTrack.getCourseName());
+                        } else {
+                            adapter.removeFavorite(currentTrack);
+                            Log.d("TrackChoice", "Removed from favorites: " + currentTrack.getCourseName());
+                        }
+
+                        // UI 업데이트
+                        imageButton.setImageResource(
+                                currentTrack.isFavorite() ? android.R.drawable.btn_star_big_on : android.R.drawable.btn_star_big_off
+                        );
                     }
-
-                    // UI 업데이트
-                    imageButton.setImageResource(
-                            currentTrack.isFavorite() ? android.R.drawable.btn_star_big_on : android.R.drawable.btn_star_big_off
-                    );
                 }
             });
-
-
         }
-
     }
 }
