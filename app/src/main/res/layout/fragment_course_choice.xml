@@ -20,19 +20,19 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="80dp"
+                android:layout_width="60dp"
                 android:layout_height="80dp"
                 tools:srcCompat="@tools:sample/avatars[1]" />
 
             <LinearLayout
-                android:layout_width="170dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/textView"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="mountain"
@@ -57,8 +57,7 @@
                         android:id="@+id/textView3"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="20dp"
-                        android:layout_weight="1"
+                        android:layout_marginLeft="5dp"
                         android:text="level"
                         android:textColor="#009688"
                         android:textSize="24sp" />
@@ -71,14 +70,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16sp"
-                android:layout_weight="6"
                 android:backgroundTint="#009688"
                 android:text="start"
                 android:textSize="12sp" />
 
             <ImageButton
                 android:id="@+id/imageButton"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:backgroundTint="#FFFFFF"

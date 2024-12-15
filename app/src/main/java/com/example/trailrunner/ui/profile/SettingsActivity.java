@@ -50,6 +50,16 @@ public class SettingsActivity extends AppCompatActivity {
 
         createNotificationChannel();
 
+        // 알림 권한 요청
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                        123);
+            }
+        }
+
         exerciseTimePicker = findViewById(R.id.exerciseTimePicker);
        // reviewNotificationSwitch = findViewById(R.id.reviewNotificationSwitch);
         View btnExit = findViewById(R.id.btnExit);
@@ -94,8 +104,12 @@ public class SettingsActivity extends AppCompatActivity {
             NotificationChannel channel = new NotificationChannel(
                     CHANNEL_ID,
                     "TrailRunner Notifications",
-                    NotificationManager.IMPORTANCE_DEFAULT
+                    NotificationManager.IMPORTANCE_HIGH  // HIGH로 변경
             );
+            channel.setDescription("운동 알림");
+            channel.enableVibration(true);
+            channel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
+            channel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PUBLIC);
             notificationManager.createNotificationChannel(channel);
         }
     }
@@ -118,17 +132,22 @@ public class SettingsActivity extends AppCompatActivity {
             calendar.add(Calendar.DAY_OF_YEAR, 1);
         }
 
-        alarmManager.setRepeating(
-                AlarmManager.RTC_WAKEUP,
-                calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY,
-                pendingIntent
-        );
-
-
-        Toast.makeText(this,
-                String.format("매일 %02d:%02d에 운동 알림이 전송됩니다", hour, minute),
-                Toast.LENGTH_SHORT).show();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (alarmManager.canScheduleExactAlarms()) {
+                alarmManager.setAlarmClock(
+                        new AlarmManager.AlarmClockInfo(calendar.getTimeInMillis(), pendingIntent),
+                        pendingIntent
+                );
+            } else {
+                Toast.makeText(this, "정확한 알람 권한이 필요합니다", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.getTimeInMillis(),
+                    pendingIntent
+            );
+        }
 
         updateAlarmStatus();
     }

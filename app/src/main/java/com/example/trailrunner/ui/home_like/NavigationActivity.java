@@ -191,6 +191,8 @@ public class NavigationActivity extends AppCompatActivity implements OnMapReadyC
         // 도착점 도착 확인
         if (getDistance(currentLocation, end) < ARRIVAL_THRESHOLD) {
             guidanceText.setText("목적지에 도착했습니다!");
+            Button btnExit = findViewById(R.id.btnExit);
+            btnExit.setVisibility(View.VISIBLE); // 버튼을 보이게 설정
             return;
         }
 
